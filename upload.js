@@ -19,8 +19,8 @@ const storage = multer.diskStorage({
 
 
 
-app.post('/upload-profile-pic', (req, res) => {
-  let upload = multer ({ storage: storage, fileFilter: helpers.imageFilter }).single('profile_pic');
+app.post('/upload-image', (req, res) => {
+  let upload = multer ({ storage: storage, fileFilter: helpers.imageFilter }).single('image-file');
 
   upload(req, res, (err) => {
     if (req.fileValidationError) {
@@ -36,8 +36,41 @@ app.post('/upload-profile-pic', (req, res) => {
       return res.send(err);
     }
 
-    res.send(`You have uploaded image: <hr/><img src="/${req.file.path}" 
-              width="500"> <hr/> <a href="./">Upload another image</a>`)
+    res.send(`<link href="style.css" rel="stylesheet" type="text/css" media="all">
+              <div class="row">
+              <div class="main">
+              You have uploaded image: <hr/><img src="/${req.file.path}" 
+              width="500"> <hr/> <a href="./">Upload another image</a>
+              </div></div>`)
+  });
+});
+
+app.post('/upload-multiple-images', (req, res) => {
+  let upload = multer ({ storage: storage, fileFilter: helpers.imageFilter }).array('multiple-images', 10);
+  
+  upload(req, res, (err) => {
+    if (req.fileValidationError) {
+      return res.send(req.fileValidationError);
+    }
+    /*else if (!req.file) {
+      return res.send('Please select an image to upload.');
+    }*/
+    else if (err instanceof multer.MulterError) {
+      return res.send(err);
+    }
+    else if (err) {
+      return res.send(err);
+    }
+
+    let result = "You have uploaded these images: <hr/>";
+    const files = req.files;
+    let index, len;
+
+    for (index = 0, len = files.length; index < len; ++index) {
+      result += `<img src="${files[index].path}" width="300" style="margin-right: 20px;">`
+    }
+    result += '<hr/><a href="./">Upload more images</a>';
+    res.send(result);
   });
 });
 

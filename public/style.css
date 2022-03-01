@@ -1,0 +1,22 @@
+body {
+  background: beige;
+}
+
+
+
+.row {
+	text-align: center;
+	align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+	width: 50%;
+	margin: auto;
+	justify-content: space-around;
+}
+.main {
+  font-size: 32px;
+  flex: 100%;
+	border: 1px solid black;
+  padding: 12px;
+	height: 100%;
+}
