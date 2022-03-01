@@ -6,10 +6,11 @@ const helpers = require('./helpers')
 const app = express();
 const port = process.env.PORT || 8000;
 
+app.use(express.static(__dirname + '/public'));
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
+  destination: 'uploads/',
 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -17,7 +18,6 @@ const storage = multer.diskStorage({
 })
 
 
-app.use(express.static(__dirname + '/public'));
 
 app.post('/upload-profile-pic', (req, res) => {
   let upload = multer ({ storage: storage, fileFilter: helpers.imageFilter }).single('profile_pic');
@@ -36,13 +36,9 @@ app.post('/upload-profile-pic', (req, res) => {
       return res.send(err);
     }
 
-    res.send(`You have uploaded image: <hr/><img src="${req.file.path}" 
-              width="500 <hr /><a href="./">Upload another image</a>"`)
+    res.send(`You have uploaded image: <hr/><img src="/${req.file.path}" 
+              width="500"> <hr/> <a href="./">Upload another image</a>`)
   });
-});
-
-app.use('/', (req, res, next) => {
-  res.sendFile(__dirname + '/index.html');
 });
 
 
