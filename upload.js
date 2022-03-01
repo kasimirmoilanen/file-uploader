@@ -52,9 +52,9 @@ app.post('/upload-multiple-images', (req, res) => {
     if (req.fileValidationError) {
       return res.send(req.fileValidationError);
     }
-    /*else if (!req.file) {
+    else if (!req.file) {
       return res.send('Please select an image to upload.');
-    }*/
+    }
     else if (err instanceof multer.MulterError) {
       return res.send(err);
     }
